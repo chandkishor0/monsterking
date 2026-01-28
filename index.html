@@ -3,286 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>|>> MONSTER KING  <<|</title>
+    <title>|>> MONSTER KING: PRO CONSOLE <<|</title>
     
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
-        /* --- 0. Hacker Theme Base Styles --- */
         :root {
             --hacker-green: #00ff41;
             --hacker-dark: #0a0a0a;
-            --hacker-shadow: 0 0 5px var(--hacker-green), 0 0 10px var(--hacker-green);
-            --hacker-border: 1px solid rgba(0, 255, 65, 0.5);
+            --hacker-shadow: 0 0 10px var(--hacker-green);
         }
-        
-        /* General Setup */
+
         body { 
-            margin: 0; 
-            padding: 0; 
+            margin: 0; padding: 0; 
             font-family: 'VT323', monospace; 
             overflow: hidden; 
             background-color: var(--hacker-dark); 
             color: var(--hacker-green);
         }
-        #main-website-frame { 
-            width: 100%; 
-            height: 100vh; 
-            border: none; 
-            pointer-events: auto; 
-            opacity: 0.85; 
+
+        .mesh { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: radial-gradient(at 0% 0%, #002200 0, transparent 50%), radial-gradient(at 100% 100%, #050505 0, transparent 50%); 
+            z-index: -1; 
         }
-        
-        /* --- 1. Floating Icon Container (Positioning) --- */
+
+        #main-website-frame { width: 100%; height: 100vh; border: none; opacity: 0.85; }
+
         #floating-icon-container {
-            position: fixed;
-            bottom: 30px; 
-            right: 30px; 
-            z-index: 1000; 
-            cursor: grab; 
-            touch-action: none; 
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            transition: transform 0.3s ease-out; 
+            position: fixed; bottom: 30px; right: 30px; 
+            z-index: 1000; cursor: grab; touch-action: none; 
+            display: flex; flex-direction: column; align-items: flex-end;
         }
-        
-        /* Floating Icon - Terminal Button Style */
+
         #floating-icon {
-            width: 60px; 
-            height: 60px; 
-            border-radius: 50%; 
+            width: 70px; height: 70px; border-radius: 50%; 
             background-color: rgba(0, 50, 0, 0.8);
-            border: var(--hacker-border);
+            border: 2px solid var(--hacker-green);
             box-shadow: var(--hacker-shadow);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background-image: url('monsterking.jpg'); 
+            background-size: cover; background-position: center;
             cursor: pointer;
-            transition: box-shadow 0.2s, background-color 0.2s;
-            font-size: 30px;
-            
-            /* >>>>>>>>>>> HERE IS THE CHANGE FOR PNG IMAGE <<<<<<<<<<< */
-            background-image: url('monsterking.jpg'); /* <<<--- अपनी फ़ाइल का नाम बदलें (Change to your file name) */
-            background-size: 70px 70px; /* <<<--- PNG आइकन का साइज़ (PNG icon size) */
-            background-repeat: no-repeat;
-            background-position: center;
-            /* >>>>>>>>>>> END OF CHANGE <<<<<<<<<<< */
         }
 
-        /* Menu Icon placeholder styling (REMOVED: The content '[]' is removed) */
-        /*
-        #floating-icon::before {
-            content: '[]'; 
-            text-shadow: var(--hacker-shadow);
-        }
-        */
-
-        /* --- 2. Floating Menu - Hacker Panel Style --- */
         #floating-menu {
-            display: none; 
-            position: absolute; 
-            bottom: 75px; 
-            right: 0; 
-            width: 300px; 
-            background-color: rgba(10, 10, 10, 0.95); 
-            border-radius: 0; 
-            border: var(--hacker-border);
-            box-shadow: var(--hacker-shadow);
-            overflow: hidden;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-
-        #floating-menu.open {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Menu Item Styling */
-        .menu-option, .sub-menu-option, #start-button, #session-status-bar {
-            padding: 10px 15px; 
-            color: var(--hacker-green); 
-            text-decoration: none; 
-            display: block; 
-            cursor: pointer; 
-            transition: background-color 0.1s, color 0.1s; 
-            font-size: 20px;
-            border-bottom: 1px dashed rgba(0, 255, 65, 0.2);
-            text-shadow: 0 0 2px var(--hacker-green);
-        }
-        .menu-option:hover { 
-            background-color: var(--hacker-green); 
-            color: var(--hacker-dark); 
-            box-shadow: inset var(--hacker-shadow);
-        }
-        
-        /* Sub Menu */
-        #prediction-sub-menu {
-            display: none; 
-            padding: 0; margin: 0; 
-            background-color: rgba(0, 0, 0, 0.7); 
-        }
-        .sub-menu-option { 
-            padding-left: 30px; 
-        }
-        .sub-menu-option:hover { 
-            background-color: rgba(0, 255, 65, 0.3);
-            color: white; 
-        }
-        .selected-sub-option { 
-            background-color: var(--hacker-green) !important; 
-            color: var(--hacker-dark) !important; 
-            text-shadow: none;
-        }
-
-        /* Start Button - EXECUTE Command */
-        #start-button {
-            display: none; 
-            text-align: center; 
-            color: white; 
-            font-weight: bold;
-            border-radius: 0; 
-            border-top: var(--hacker-border);
-            text-shadow: 0 0 5px white;
-            background-color: #0066AA; 
-        }
-        #start-button:hover { background-color: #004488; }
-        
-        /* Info and UID Forms */
-        .prediction-info {
-            display: none;
-            padding: 10px 15px; 
-            background-color: rgba(0, 50, 0, 0.8); 
-            text-align: left;
-            font-weight: bold;
-            color: var(--hacker-green);
-            border-bottom: var(--hacker-border);
-            text-shadow: var(--hacker-shadow);
-        }
-        /* Session Status Bar Style */
-        #session-status-bar {
-            background-color: rgba(0, 70, 0, 0.9);
-            color: white;
-            font-weight: bold;
-            text-align: center;
-            border-bottom: var(--hacker-border);
-            display: none; /* Initially hidden */
-        }
-        
-        #uid-form-container {
-            padding: 15px;
-            display: none; 
-            flex-direction: column;
-            gap: 10px;
-            background-color: rgba(0, 0, 0, 0.7);
-        }
-        #uid-input {
-            padding: 8px;
-            border: var(--hacker-border);
-            border-radius: 0;
-            font-size: 18px;
-            background-color: var(--hacker-dark);
-            color: var(--hacker-green);
-            box-shadow: inset 0 0 3px var(--hacker-green);
-        }
-        #save-uid-button {
-            padding: 10px;
-            background-color: #007700; 
-            color: white;
-            border: var(--hacker-border);
-            border-radius: 0;
-            cursor: pointer;
-            font-weight: bold;
-            box-shadow: 0 0 5px var(--hacker-green);
-        }
-        #save-uid-button:hover {
-            background-color: #00aa00;
-        }
-        /* New Logout Button Style */
-        #logout-button {
-            background-color: #880000;
-            color: white;
-            padding: 10px 15px;
-            font-weight: bold;
-            text-align: center;
-            display: none; /* Initially hidden */
-            cursor: pointer;
-        }
-        #logout-button:hover {
-            background-color: #aa0000;
-        }
-        
-        /* Bounce Animation Keyframes - Simple pulse instead of bounce */
-        @keyframes pulse {
-            0% {box-shadow: 0 0 5px var(--hacker-green), 0 0 10px var(--hacker-green);}
-            50% {box-shadow: 0 0 10px var(--hacker-green), 0 0 20px var(--hacker-green);}
-            100% {box-shadow: 0 0 5px var(--hacker-green), 0 0 10px var(--hacker-green);}
-        }
-        .bounce-animation {
-            animation: pulse 1.5s infinite;
-        }
-        .hidden-until-uid {
-            display: none !important;
-        }
-        /* Custom Toast Notification Styling (Still here, but will be used sparingly/for console logs) */
-        #toast-container {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1001;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .toast-notification {
-            background-color: rgba(0, 100, 0, 0.9);
-            color: white;
-            padding: 15px 20px;
-            border-radius: 0;
+            display: none; position: absolute; bottom: 85px; right: 0; 
+            width: 320px; background-color: rgba(10, 10, 10, 0.95); 
             border: 1px solid var(--hacker-green);
-            box-shadow: 0 0 10px var(--hacker-green);
-            opacity: 0;
-            transition: opacity 0.4s, transform 0.4s;
-            transform: translateY(-20px);
-            font-family: 'VT323', monospace;
-            font-size: 18px;
-            min-width: 250px;
-            text-align: center;
+            box-shadow: var(--hacker-shadow);
+            padding: 15px; opacity: 0; transform: translateY(10px); transition: all 0.3s ease;
         }
-        .toast-notification.show {
-            opacity: 1;
-            transform: translateY(0);
+
+        #floating-menu.open { display: block; opacity: 1; transform: translateY(0); }
+
+        .menu-option, .sub-menu-option, #start-btn {
+            padding: 10px; margin-bottom: 8px; color: var(--hacker-green); 
+            border: 1px solid rgba(0, 255, 65, 0.3); display: block; 
+            cursor: pointer; font-size: 18px; text-align: left; transition: all 0.2s;
         }
-        .toast-notification.error {
-            background-color: rgba(150, 0, 0, 0.9);
-            border: 1px solid red;
-            box-shadow: 0 0 10px red;
+
+        .menu-option:hover, .sub-menu-option:hover { background-color: var(--hacker-green); color: black; }
+        .selected-sub-option { background-color: var(--hacker-green) !important; color: black !important; font-weight: bold; }
+
+        .prediction-info {
+            background: rgba(0, 40, 0, 0.8); padding: 12px; margin-bottom: 10px;
+            border-left: 4px solid var(--hacker-green); font-size: 16px;
+            display: none; justify-content: space-between; align-items: center;
         }
+
+        #timer-display { 
+            font-size: 24px; color: #ffffff; font-weight: bold; 
+            text-shadow: 0 0 5px var(--hacker-green);
+            min-width: 65px; text-align: right;
+        }
+
+        #status-bar { font-size: 14px; text-align: center; margin-bottom: 10px; border-bottom: 1px dashed var(--hacker-green); padding-bottom: 5px; }
+
+        #uid-input { width: 100%; background: black; border: 1px solid var(--hacker-green); color: var(--hacker-green); padding: 8px; margin-bottom: 10px; outline: none; }
+        #save-uid-btn { width: 100%; background: var(--hacker-green); color: black; font-weight: bold; padding: 8px; cursor: pointer; }
+
+        #logout-btn { color: #ff4444; text-align: center; font-size: 16px; margin-top: 10px; cursor: pointer; border: 1px solid #ff4444; padding: 5px; }
+
+        #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1001; }
+        .toast { background: black; color: var(--hacker-green); border: 1px solid var(--hacker-green); padding: 10px 20px; margin-bottom: 10px; box-shadow: var(--hacker-shadow); min-width: 250px; text-align: center; }
     </style>
     
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
-        import { 
-            getFirestore, 
-            collection, 
-            addDoc, 
-            query, 
-            orderBy, 
-            limit, 
-            onSnapshot, 
-            serverTimestamp,
-            getDocs, 
-            where,
-            setDoc, 
-            doc, 
-            deleteDoc 
-        } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp, getDocs, where, setDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
         
-        // --- WARNING: Using dummy configuration to avoid exposure ---
         const firebaseConfig = {
             apiKey: "AIzaSyAlc-EfD2GFdsSlMGuRou-q4dW1b9btDBQ",
             authDomain: "daman-acc31.firebaseapp.com",
@@ -292,633 +102,236 @@
             appId: "1:48848275796:web:9ed84e8e373c0de6aea0c1",
             measurementId: "G-JDKL7CNN5N"
         };
-        // --- END WARNING ---
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-
-        // Export Firebase functions/vars to global scope
-        window.db = db;
-        window.collection = collection;
-        window.addDoc = addDoc;
-        window.query = query;
-        window.orderBy = orderBy;
-        window.limit = limit;
-        window.onSnapshot = onSnapshot;
-        window.serverTimestamp = serverTimestamp;
-        window.getDocs = getDocs; 
-        window.where = where; 
-        window.setDoc = setDoc;
-        window.doc = doc;
-        window.deleteDoc = deleteDoc;
-        
-        function generateUUID() {
-            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-                return v.toString(16);
-            });
-        }
-        
-        window.currentSessionId = generateUUID();
-
+        Object.assign(window, { db, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp, getDocs, where, setDoc, doc, deleteDoc });
     </script>
 </head>
 <body>
 
-    <iframe id="main-website-frame" src="https://damanclub.store/#/register?invitationCode=Ii3GN910148"></iframe>
+    <div class="mesh"></div>
+    <iframe id="main-website-frame" src="https://damangames.bio/#/register?invitationCode=kxcdT910132"></iframe>
 
     <div id="toast-container"></div>
     
     <div id="floating-icon-container">
-        <div id="floating-icon" class="bounce-animation"></div>
-
+        <div id="floating-icon"></div>
         <div id="floating-menu">
-            <div id="prediction-current-period" class="prediction-info">
-                > STATUS: INIT. | TARGET: UNKNOWN
-            </div>
+            <div id="status-bar" style="display:none;"></div>
             
-            <div id="session-status-bar" class="menu-option"></div>
-
-            <a class="menu-option main-link" href="https://t.me/Monster_King_official" target="_blank">>> TELEGRAM_ACCESS</a>
-            
-            <div class="menu-option" id="verify-uid-option">>> VERIFY_ID_0X1A</div>
-            
-            <div class="menu-option hidden-until-uid" id="prediction-option">>> RUN_PREDICTION_ENGINE</div>
-            
-            <a class="menu-option main-link" href="https://t.me/MonsterKing_official_Bot" target="_blank">>> SERVICE_CONTACT</a>
-            
-            <div id="uid-form-container">
-                <input type="text" id="uid-input" placeholder=">> ENTER TARGET UID (Cannot be changed later)">
-                <button id="save-uid-button">EXECUTE: SAVE_UID</button>
-            </div>
-            
-            <div id="logout-button">LOGOUT_SESSION </div>
-
-            <div id="prediction-sub-menu">
-                <div class="sub-menu-option" data-game="wingo_30sec">> WINGO_30SEC_MODULE</div>
-                <div class="sub-menu-option" data-game="wingo_1min">> WINGO_1MIN_MODULE</div>
-                <div class="sub-menu-option" data-game="wingo_3min">> WINGO_3MIN_MODULE</div> 
-                <div class="sub-menu-option" data-game="wingo_5min">> WINGO_5MIN_MODULE</div> 
+            <div id="prediction-info" class="prediction-info">
+                <div id="period-text">> SYSTEM_READY</div>
+                <div id="timer-display">0:00</div>
             </div>
 
-            <div id="start-button">EXECUTE: START</div>
+            <div id="main-nav">
+                <div class="menu-option" id="uid-menu-btn">>> VERIFY IDENTITY</div>
+                <div class="menu-option" id="engine-menu-btn" style="display:none;">>> RUN ENGINE</div>
+                <a class="menu-option" href="https://t.me/Monster_King_official" target="_blank">>> TELEGRAM ACCESS</a>
+                <a class="menu-option" href="https://t.me/MonsterKing_official_Bot" target="_blank">>> CUSTOMER SERVICE</a>
+            </div>
+
+            <div id="uid-section" style="display:none;">
+                <input type="text" id="uid-input" placeholder="ENTER TARGET UID">
+                <button id="save-uid-btn">EXECUTE SAVE</button>
+                <div class="text-center mt-2 cursor-pointer text-xs" id="back-to-main-uid">BACK</div>
+            </div>
+
+            <div id="engine-section" style="display:none;">
+                <div class="sub-menu-option" data-game="wingo_30sec">> WINGO 30S</div>
+                <div class="sub-menu-option" data-game="wingo_1min">> WINGO 1M</div>
+                <div class="sub-menu-option" data-game="wingo_3min">> WINGO 3M</div>
+                <button id="start-btn" style="display:none; width: 100%; background: #004400; color: white; padding: 10px; margin-top: 10px; border: 1px solid var(--hacker-green);">START ANALYSIS</button>
+                <div class="text-center mt-2 cursor-pointer text-xs" id="back-to-main-engine">BACK</div>
+            </div>
+
+            <div id="logout-btn" style="display:none;">LOGOUT</div>
         </div>
     </div>
 
+    <audio id="tik-sfx" preload="auto">
+        <source src="https://www.soundjay.com/buttons/button-16.mp3" type="audio/mpeg">
+    </audio>
+
     <script>
-        // DOM Elements
-        const iconContainer = document.getElementById('floating-icon-container');
-        const floatingIcon = document.getElementById('floating-icon');
-        const menu = document.getElementById('floating-menu');
-        const predictionOption = document.getElementById('prediction-option');
-        const subMenu = document.getElementById('prediction-sub-menu');
-        const startButton = document.getElementById('start-button');
-        const subOptions = document.querySelectorAll('#prediction-sub-menu .sub-menu-option');
-        const uidOption = document.getElementById('verify-uid-option');
-        const uidFormContainer = document.getElementById('uid-form-container');
-        const saveUidButton = document.getElementById('save-uid-button');
-        const uidInput = document.getElementById('uid-input');
-        const predictionInfoBar = document.getElementById('prediction-current-period');
-        const toastContainer = document.getElementById('toast-container'); 
-        const hiddenElements = document.querySelectorAll('.hidden-until-uid');
-        const logoutButton = document.getElementById('logout-button');
-        const sessionStatusBar = document.getElementById('session-status-bar');
+        const menu = document.getElementById('floating-menu'),
+              icon = document.getElementById('floating-icon'),
+              iconBox = document.getElementById('floating-icon-container'),
+              mainNav = document.getElementById('main-nav'),
+              uidSection = document.getElementById('uid-section'),
+              engineSection = document.getElementById('engine-section'),
+              predInfo = document.getElementById('prediction-info'),
+              statusBar = document.getElementById('status-bar'),
+              uidMenuBtn = document.getElementById('uid-menu-btn'),
+              logoutBtn = document.getElementById('logout-btn'),
+              timerDisplay = document.getElementById('timer-display'),
+              periodText = document.getElementById('period-text'),
+              startBtn = document.getElementById('start-btn'),
+              tikSfx = document.getElementById('tik-sfx');
 
-        let selectedGame = null; 
-        let isDragging = false; 
-        let hasDragged = false; 
-        let touchStartTime = 0;
-        const TAP_THRESHOLD = 200; 
-        let currentUid = localStorage.getItem('targetUid') || null;
-        let sessionListener = null;
+        let currentUid = localStorage.getItem('targetUid'),
+            selectedGame = null,
+            isDragging = false,
+            hasDragged = false,
+            timerInterval = null;
 
-        // --- Toast Function (All English) ---
-        function showToast(message, isError = false) {
-            console.log(`[TOAST: ${isError ? 'ERROR' : 'INFO'}] ${message}`); 
-            const toast = document.createElement('div');
-            toast.className = 'toast-notification';
-            if (isError) {
-                toast.classList.add('error');
-            }
-            toast.textContent = message;
-            
-            toastContainer.appendChild(toast);
-
-            setTimeout(() => {
-                toast.classList.add('show');
-            }, 10); 
-
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => {
-                    toast.remove();
-                }, 400); 
-            }, 4000); 
+        function playTik() {
+            tikSfx.currentTime = 0;
+            tikSfx.play().catch(e => console.log("Sound failed:", e));
         }
 
-        // --- UID Session Logic ---
-
-        function updateSessionStatus(uid, statusText, isError = false) {
-            sessionStatusBar.style.display = 'block';
-            sessionStatusBar.textContent = `> UID: ${uid} | STATUS: ${statusText}`;
-            sessionStatusBar.classList.toggle('error', isError);
-            sessionStatusBar.style.backgroundColor = isError ? 'rgba(50, 0, 0, 0.9)' : 'rgba(0, 70, 0, 0.9)';
-        }
-
-        // Function to check and maintain the active session
-        function startSessionChecker(uid) {
-            // Unsubscribe existing listener
-            if (sessionListener) {
-                sessionListener();
-            }
-
-            const docRef = window.doc(window.db, "active_sessions", uid);
-
-            sessionListener = window.onSnapshot(docRef, (docSnapshot) => {
-                if (docSnapshot.exists()) {
-                    const sessionData = docSnapshot.data();
-                    
-                    if (sessionData.sessionId !== window.currentSessionId) {
-                        // A new session has taken over!
-                        updateSessionStatus(uid, 'SESSION TAKEN OVER', true);
-                        console.log(`[SESSION LOG] UID ${uid} active on another device. Logging out.`);
-                        // User-facing error notification
-                        showToast(">> [ACCESS DENIED] This ID is active on another device. Logging out...", true);
-                        handleLogout(false); 
-                    } else {
-                        // This is the active session
-                        updateSessionStatus(uid, 'ACTIVE');
-                        logoutButton.style.display = 'block'; // Show logout option
-                    }
-                } else if (currentUid) {
-                    // Document removed, perhaps by intentional logout from another device or manual removal
-                    updateSessionStatus(uid, 'LOGGED OUT EXTERNALLY', true);
-                    console.log(`[SESSION LOG] UID ${uid} logged out externally.`);
-                    handleLogout(false); 
-                }
-            }, (error) => {
-                console.error("[SESSION ERROR] Listener Error:", error);
-            });
-        }
-        
-        async function handleLogout(deleteRemote = true) {
-            const uidToLogout = currentUid;
-            
-            // Stop listeners
-            if (window.currentListener) {
-                window.currentListener();
-                window.currentListener = null;
-            }
-            if (sessionListener) {
-                sessionListener();
-                sessionListener = null;
-            }
-
-            // 1. Delete session document if requested (Only for intentional logout)
-            if (deleteRemote && uidToLogout) {
-                try {
-                    await window.deleteDoc(window.doc(window.db, "active_sessions", uidToLogout));
-                    console.log(`[FIREBASE] Session for ${uidToLogout} removed from Firestore.`);
-                } catch (e) {
-                    console.error("[FIREBASE ERROR] Could not clear remote session:", e);
-                }
-            }
-
-            // 2. Clear local data and UI state
-            localStorage.removeItem('targetUid');
-            currentUid = null;
-            uidInput.value = '';
-            
-            // Hide everything related to being logged in
-            hiddenElements.forEach(el => el.classList.add('hidden-until-uid'));
-            subMenu.style.display = 'none';
-            startButton.style.display = 'none';
-            predictionInfoBar.style.display = 'none';
-            logoutButton.style.display = 'none';
-            sessionStatusBar.style.display = 'none';
-            
-            // Re-enable UID form for new entry
-            uidFormContainer.style.display = 'flex';
-            
-            menu.classList.remove('open');
-            floatingIcon.classList.add('bounce-animation');
-            // User-facing success notification
-            showToast(">> [LOGOUT SUCCESS] Session Ended.", false);
-        }
-        
-        // Logout button listener
-        logoutButton.addEventListener('click', () => {
-             handleLogout(true); // Delete remote session on intentional logout
-        });
-
-
-        /**
-         * Checks the user's status in uid_collection and updates the UI accordingly.
-         * Only 'Approved' users get access to the prediction engine elements.
-         */
-        async function checkUserStatusAndDisplayUI(uid) {
-            try {
-                const q = window.query(
-                    window.collection(window.db, "uid_collection"),
-                    window.where("uid", "==", uid),
-                    window.limit(1)
-                );
-                const docSnap = await window.getDocs(q);
-
-                let isApproved = false;
-                let userStatus = 'Pending';
-                
-                if (!docSnap.empty) {
-                    const userData = docSnap.docs[0].data();
-                    userStatus = userData.status || 'Pending';
-                    if (userStatus === 'Approved') {
-                        isApproved = true;
-                    } 
-                }
-                
-                if (isApproved) {
-                    // Approved: Show engine, start session
-                    uidFormContainer.style.display = 'none';
-                    hiddenElements.forEach(el => el.classList.remove('hidden-until-uid'));
-                    startSessionChecker(uid); 
-                    // Better Feel Success Toast
-                    showToast(">> [ACCESS GRANTED] ID Verified. Prediction Engine ON.", false);
-                } else if (userStatus === 'Banned' || userStatus === 'Rejected') {
-                    // Banned/Rejected: Deny access and log out
-                    console.log(`[STATUS CHECK] UID status: ${userStatus}. Access Denied. Logging out.`);
-                    showToast(`>> [ACCESS DENIED] Your UID status is: ${userStatus}.`, true);
-                    handleLogout(true); 
-                } else {
-                     // Pending/Not Found: Lock engine, show status bar
-                    uidFormContainer.style.display = 'none';
-                    hiddenElements.forEach(el => el.classList.add('hidden-until-uid'));
-                    sessionStatusBar.style.display = 'block';
-                    logoutButton.style.display = 'block';
-                    updateSessionStatus(uid, userStatus.toUpperCase());
-                    // Better Feel Warning Toast
-                    showToast(">> [STATUS ALERT] ID is Pending Review. Engine Locked.", true);
-                }
-
-            } catch (e) {
-                console.error("[STATUS ERROR] Could not verify UID status: ", e);
-                // Non-technical error toast
-                showToast(">> [ERROR] Connection/Verification Failed.", true);
-                uidFormContainer.style.display = 'flex';
-                hiddenElements.forEach(el => el.classList.add('hidden-until-uid'));
-            }
-        }
-
-        // 1. UID Verification Logic
-        saveUidButton.addEventListener('click', async () => {
-            const uid = uidInput.value.trim();
-            if (uid && uid.length > 5) { // Basic validation
-                try {
-                    // --- Check if UID exists in UID_COLLECTION (only logging once) ---
-                    const qLog = window.query(
-                        window.collection(window.db, "uid_collection"),
-                        window.where("uid", "==", uid),
-                        window.limit(1)
-                    );
-                    const logSnapshot = await window.getDocs(qLog);
-
-                    if (logSnapshot.empty) {
-                        // First time seen: Log the UID with default 'Pending' status
-                        await window.addDoc(window.collection(window.db, "uid_collection"), {
-                            uid: uid,
-                            status: 'Pending',
-                            firstSeen: window.serverTimestamp(),
-                        });
-                        console.log(`[FIREBASE] New UID ${uid} registered.`);
-                    } else {
-                        console.log(`[FIREBASE] Existing UID ${uid} confirmed.`);
-                    }
-
-
-                    // 1. Log UID/Session information (replacing old session)
-                    const sessionData = {
-                        uid: uid,
-                        sessionId: window.currentSessionId,
-                        timestamp: window.serverTimestamp(),
-                        lastLoginIP: 'MOCK_IP' 
-                    };
-
-                    // Use setDoc with the UID as the document ID to ensure only one session per UID exists
-                    await window.setDoc(window.doc(window.db, "active_sessions", uid), sessionData);
-                    
-                    // 2. Save locally
-                    localStorage.setItem('targetUid', uid);
-                    currentUid = uid;
-                    
-                    // 3. Check status and update UI (This will trigger the final success/pending toast)
-                    checkUserStatusAndDisplayUI(uid);
-
-
-                } catch (e) {
-                    console.error("[FIREBASE ERROR] UID session update failed: ", e);
-                    showToast(">> [ERROR] Connection failed during ID save.", true);
-                }
-            } else {
-                showToast(">> [WARNING] Invalid UID format or empty. Min 6 chars required.", true);
-            }
-        });
-
-        // --- Initialization and UI Toggles ---
-
-        function checkInitialState() {
-            if (currentUid) {
-                // If UID is found, check its status before granting access
-                checkUserStatusAndDisplayUI(currentUid);
-            } else {
-                // If no UID is found, show the input form and hide logged-in elements
-                uidFormContainer.style.display = 'flex';
-                hiddenElements.forEach(el => el.classList.add('hidden-until-uid'));
-                logoutButton.style.display = 'none';
-                sessionStatusBar.style.display = 'none';
-            }
-        }
-        
-        // Run initial check
-        window.addEventListener('load', checkInitialState);
-        
-        // Your existing getCurrentPeriod Function 
-        function getCurrentPeriod(gameType) {
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = String(now.getMonth() + 1).padStart(2, '0');
-            const day = String(now.getDate()).padStart(2, '0');
-            const datePrefix = `${year}${month}${day}`; 
-
-            let fixedTimePart;
-            let periodDurationMs; 
-            
-            if (gameType === 'wingo_30sec') {
-                fixedTimePart = '10005'; 
-                periodDurationMs = 30 * 1000;
-            } else if (gameType === 'wingo_1min') {
-                fixedTimePart = '10001'; 
-                periodDurationMs = 60 * 1000;
-            } else if (gameType === 'wingo_3min') {
-                fixedTimePart = '10002'; 
-                periodDurationMs = 3 * 60 * 1000;
-            } else if (gameType === 'wingo_5min') {
-                fixedTimePart = '10003'; 
-                periodDurationMs = 5 * 60 * 1000;
-            } else {
-                return 'ERROR_GAME_TYPE'; 
-            }
-            
-            // NOTE: The startOfDay time (5:30 AM IST) is critical for period calculation.
-            const startOfDay = new Date(year, now.getMonth(), now.getDate(), 5, 30, 0, 0);
-            let timeDifferenceMs = now.getTime() - startOfDay.getTime();
-            if (timeDifferenceMs < 0) {
-                // Handle case where it's before 5:30 AM today, so use 5:30 AM yesterday
-                timeDifferenceMs = now.getTime() - (startOfDay.getTime() - 86400000);
-            }
-            
-            const periodsPassed = Math.floor(timeDifferenceMs / periodDurationMs);
-            const initialOffset = 1; 
-            const sequentialNumber = periodsPassed + initialOffset;
-            const sequentialId = String(sequentialNumber % 10000).padStart(4, '0');
-            
-            return `${datePrefix}${fixedTimePart}${sequentialId}`;
-        }
-        
-        function startPredictionListener(gameCollection) {
-            if (window.currentListener) {
-                window.currentListener();
-            }
-
-            const q = window.query(
-                window.collection(window.db, gameCollection), 
-                window.orderBy("timestamp", "desc"), 
-                window.limit(1)
-            );
-
-            window.currentListener = window.onSnapshot(q, (snapshot) => {
-                const latestDoc = snapshot.docs[0];
-                if (latestDoc) {
-                    const data = latestDoc.data();
-                    const period = data.period;
-                    const prediction = data.prediction; 
-                    predictionInfoBar.innerHTML = `> TARGET: ${gameCollection.toUpperCase()} | PERIOD: ${period} | PRED: **${prediction}**`;
-                } else {
-                    predictionInfoBar.innerHTML = `> TARGET: ${gameCollection.toUpperCase()} | PRED: NO DATA FOUND`;
-                }
-            }, (error) => {
-                console.error("[PREDICTION ERROR] Listener error: ", error);
-            });
-        }
-        
-        startButton.addEventListener('click', async (e) => {
-            e.stopPropagation();
-            if (!selectedGame) return showToast('>> [WARNING] Select module first.', true); 
-            if (!currentUid) return showToast('>> [ERROR] Must have active UID to deploy.', true);
-
-            const currentPeriod = getCurrentPeriod(selectedGame);
-            const gameCollection = selectedGame;
-
-            try {
-                const qExist = window.query(
-                    window.collection(window.db, gameCollection), 
-                    window.where("period", "==", currentPeriod),
-                    window.limit(1)
-                );
-                
-                const querySnapshot = await window.getDocs(qExist); 
-
-                let predictionText;
-
-                if (!querySnapshot.empty) {
-                    const existingData = querySnapshot.docs[0].data();
-                    predictionText = existingData.prediction;
-                    console.log(`[DEPLOYMENT] Data cached for Period ${currentPeriod}. Using: ${predictionText}`);
-                    // Detailed Cache Toast
-                    showToast(`>> [PREDICTION READY] Period ${currentPeriod}: **${predictionText}**`, false);
-                } else {
-                    predictionText = Math.random() < 0.5 ? 'BIG' : 'SMALL'; 
-                    
-                    await window.addDoc(window.collection(window.db, gameCollection), {
-                        period: currentPeriod,
-                        prediction: predictionText,
-                        timestamp: window.serverTimestamp(),
-                        userId: currentUid 
-                    });
-                    
-                    console.log(`[DEPLOYMENT] Payload deployed: ${predictionText} for Period ${currentPeriod}`);
-                    // Detailed Deployment Toast
-                    showToast(`>> [PREDICTION DEPLOYED] Period ${currentPeriod}: **${predictionText}**`, false);
-                }
-
-                predictionInfoBar.innerHTML = `> TARGET: ${gameCollection.toUpperCase()} | PERIOD: ${currentPeriod} | PRED: **${predictionText}**`;
-
-            } catch (e) {
-                console.error("[DEPLOYMENT ERROR] Deployment/Check failed: ", e);
-                showToast(">> [FATAL ERROR] Deployment Failed.", true);
-            }
-        });
-        
-        // Toggle Menu Logic (Draggable logic retained from original)
-        function resetState() {
-            subMenu.style.display = 'none';
-            startButton.style.display = 'none';
-            predictionInfoBar.style.display = 'none';
-            selectedGame = null;
-            subOptions.forEach(opt => opt.classList.remove('selected-sub-option'));
-            if (window.currentListener) {
-                window.currentListener();
-                window.currentListener = null;
-            }
-        }
-        
-        function toggleMenu() {
-            if (menu.classList.contains('open')) {
-                menu.classList.remove('open');
-                floatingIcon.classList.add('bounce-animation');
-                resetState();
-            } else {
-                menu.classList.add('open');
-                floatingIcon.classList.remove('bounce-animation');
-            }
-        }
-        
-        floatingIcon.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (!hasDragged) {
-                toggleMenu();
-            }
-            hasDragged = false; 
-        });
-
+        // Tik-Tik sound fixed for every click
         document.addEventListener('click', (e) => {
-            if (!iconContainer.contains(e.target) && menu.classList.contains('open')) {
-                menu.classList.remove('open');
-                floatingIcon.classList.add('bounce-animation');
-                resetState();
+            const target = e.target;
+            if (target.closest('.menu-option, .sub-menu-option, #save-uid-btn, #start-btn, #floating-icon, #logout-btn, #back-to-main-uid, #back-to-main-engine')) {
+                playTik();
             }
         });
 
-        // UID Option Logic
-        uidOption.addEventListener('click', (e) => {
-            e.stopPropagation();
-            
-            // Close other sections
-            resetState();
+        function showToast(msg) {
+            const t = document.createElement('div');
+            t.className = 'toast';
+            t.innerText = `> ${msg}`;
+            document.getElementById('toast-container').appendChild(t);
+            setTimeout(() => t.remove(), 4000);
+        }
 
-            // Toggle UID Form/Status
-            if (currentUid) {
-                // Already logged in, show status and logout button
-                const isFormVisible = uidFormContainer.style.display === 'flex';
-                uidFormContainer.style.display = 'none';
-                logoutButton.style.display = isFormVisible ? 'none' : 'block';
-                sessionStatusBar.style.display = isFormVisible ? 'none' : 'block';
-                if (!isFormVisible) {
-                    updateSessionStatus(currentUid, 'ACTIVE');
+        function getPeriod(type) {
+            const n = new Date();
+            const ymd = n.getFullYear() + String(n.getMonth()+1).padStart(2,'0') + String(n.getDate()).padStart(2,'0');
+            let f, dur;
+            if(type==='wingo_30sec'){f='10005';dur=30000;}
+            else if(type==='wingo_1min'){f='10001';dur=60000;}
+            else {f='10002';dur=180000;}
+            const start = new Date(n.getFullYear(), n.getMonth(), n.getDate(), 5, 30, 0);
+            let diff = n.getTime() - start.getTime();
+            if(diff < 0) diff += 86400000;
+            return ymd + f + String((Math.floor(diff/dur)+1)%10000).padStart(4,'0');
+        }
+
+        function formatTime(seconds) {
+            const m = Math.floor(seconds / 60);
+            const s = seconds % 60;
+            return `${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+
+        function startTimer(type) {
+            if(timerInterval) clearInterval(timerInterval);
+            let dur = type === 'wingo_30sec' ? 30 : type === 'wingo_1min' ? 60 : 180;
+
+            timerInterval = setInterval(() => {
+                const now = new Date();
+                const secondsPassed = Math.floor((now.getTime() % (dur * 1000)) / 1000);
+                const secondsLeft = dur - secondsPassed;
+                timerDisplay.innerText = formatTime(secondsLeft);
+                
+                if(secondsLeft === dur) {
+                    const p = getPeriod(selectedGame);
+                    periodText.innerText = `> MODULE: ${selectedGame.replace('wingo_', '').toUpperCase()} | ID: ${p}`;
                 }
-            } else {
-                // Not logged in, show the input form
-                const isFormVisible = uidFormContainer.style.display === 'flex';
-                uidFormContainer.style.display = isFormVisible ? 'none' : 'flex';
-                logoutButton.style.display = 'none';
-                sessionStatusBar.style.display = 'none';
-            }
-        });
+            }, 1000);
+        }
 
-        // Toggle Prediction Sub-Menu
-        predictionOption.addEventListener('click', (e) => {
-            if (!currentUid) {
-                // Keep minimal, non-technical warning
-                showToast(">> [ACCESS DENIED] Please verify UID first.", true);
+        async function checkStatus(uid) {
+            if(!uid) {
+                uidMenuBtn.style.display = 'block';
+                logoutBtn.style.display = 'none';
                 return;
             }
-            e.stopPropagation();
-            uidFormContainer.style.display = 'none'; 
-            logoutButton.style.display = 'none';
-            
-            const isCurrentlyOpen = subMenu.style.display === 'block';
-            if (isCurrentlyOpen) {
-                resetState(); // Use reset state to close all sub-menus/buttons
-            } else {
-                subMenu.style.display = 'block';
-                predictionInfoBar.style.display = 'block';
-                predictionInfoBar.innerHTML = '> STATUS: READY. SELECT TARGET MODULE.';
-                sessionStatusBar.style.display = 'block'; // Keep status visible
-                updateSessionStatus(currentUid, 'ACTIVE');
+            try {
+                const q = window.query(window.collection(window.db, "uid_collection"), window.where("uid", "==", uid), window.limit(1));
+                const snap = await window.getDocs(q);
+                let status = snap.empty ? 'Pending' : snap.docs[0].data().status;
+                statusBar.style.display = 'block';
+                statusBar.innerHTML = `UID: ${uid} | STATUS: ${status.toUpperCase()}`;
+                uidMenuBtn.style.display = 'none';
+                if(status === 'Approved') document.getElementById('engine-menu-btn').style.display = 'block';
+                logoutBtn.style.display = 'block';
+            } catch(e) { console.error(e); }
+        }
+
+        icon.addEventListener('click', () => { if(!hasDragged) menu.classList.toggle('open'); hasDragged = false; });
+        uidMenuBtn.addEventListener('click', () => { mainNav.style.display='none'; uidSection.style.display='block'; });
+        document.getElementById('back-to-main-uid').addEventListener('click', () => { uidSection.style.display='none'; mainNav.style.display='block'; });
+        document.getElementById('back-to-main-engine').addEventListener('click', () => { 
+            engineSection.style.display='none'; 
+            mainNav.style.display='block'; 
+            predInfo.style.display='none';
+            selectedGame = null;
+            document.querySelectorAll('.sub-menu-option').forEach(o => o.classList.remove('selected-sub-option'));
+            startBtn.style.display = 'none';
+            if(timerInterval) clearInterval(timerInterval);
+        });
+
+        document.getElementById('engine-menu-btn').addEventListener('click', () => { 
+            mainNav.style.display='none'; 
+            engineSection.style.display='block'; 
+        });
+
+        document.getElementById('save-uid-btn').addEventListener('click', async () => {
+            const val = document.getElementById('uid-input').value.trim();
+            if(val.length > 5) {
+                await window.setDoc(window.doc(window.db, "active_sessions", val), { uid: val, timestamp: window.serverTimestamp() });
+                localStorage.setItem('targetUid', val);
+                showToast("UID SAVED. SESSION START.");
+                uidSection.style.display='none'; mainNav.style.display='block';
+                checkStatus(val);
             }
         });
 
-        // Sub-Menu Option Selection
-        subOptions.forEach(option => {
-            option.addEventListener('click', function(e) {
-                e.stopPropagation();
-                subOptions.forEach(opt => opt.classList.remove('selected-sub-option'));
+        document.querySelectorAll('.sub-menu-option').forEach(opt => {
+            opt.addEventListener('click', function() {
+                document.querySelectorAll('.sub-menu-option').forEach(o => o.classList.remove('selected-sub-option'));
                 this.classList.add('selected-sub-option');
-                
                 selectedGame = this.getAttribute('data-game');
-                startButton.style.display = 'block';
                 
-                const currentPeriod = getCurrentPeriod(selectedGame);
-                predictionInfoBar.innerHTML = `> TARGET: ${selectedGame.toUpperCase()} | PERIOD: ${currentPeriod} | PRED: WAITING...`;
-
-                startPredictionListener(selectedGame);
+                // Show info and button only after selection
+                predInfo.style.display = 'flex';
+                startBtn.style.display = 'block';
+                
+                const p = getPeriod(selectedGame);
+                periodText.innerText = `> MODULE: ${selectedGame.replace('wingo_', '').toUpperCase()} | ID: ${p}`;
+                startTimer(selectedGame);
             });
         });
 
-        // Draggable Icon Logic (Retained from original)
+        startBtn.addEventListener('click', async () => {
+            const p = getPeriod(selectedGame);
+            const gameLabel = selectedGame.replace('wingo_', '').toUpperCase();
+            periodText.innerHTML = `> ANALYZING ${gameLabel}...`;
+            
+            setTimeout(async () => {
+                const q = window.query(window.collection(window.db, selectedGame), window.where("period", "==", p), window.limit(1));
+                const snap = await window.getDocs(q);
+                let res = snap.empty ? (Math.random() < 0.5 ? 'BIG' : 'SMALL') : snap.docs[0].data().prediction;
+                
+                if(snap.empty) {
+                    await window.addDoc(window.collection(window.db, selectedGame), { period: p, prediction: res, timestamp: window.serverTimestamp() });
+                }
+                
+                periodText.innerHTML = `> ${gameLabel} | ID: ${p}<br>> RESULT: <span style="color:white; font-weight:bold;">${res}</span>`;
+                showToast(`[${gameLabel}] PERIOD: ${p} | PRED: ${res}`);
+            }, 1000);
+        });
+
+        logoutBtn.addEventListener('click', () => { localStorage.clear(); showToast("LOGGED OUT."); location.reload(); });
+
         let offset = { x: 0, y: 0 };
-        floatingIcon.addEventListener('mousedown', startDrag);
-        
-        function startDrag(e) {
-            if (e.type === 'touchstart') {
-                e.stopPropagation();
-                touchStartTime = Date.now(); 
-            } else {
-                e.stopPropagation();
-            }
-            menu.classList.remove('open'); 
-            isDragging = true;
-            hasDragged = false; 
-            iconContainer.style.cursor = 'grabbing';
-            floatingIcon.classList.remove('bounce-animation'); 
-            const clientX = e.clientX || (e.touches ? e.touches[0].clientX : undefined);
-            const clientY = e.clientY || (e.touches ? e.touches[0].clientY : undefined);
-            if (clientX === undefined || clientY === undefined) return;
-            const rect = iconContainer.getBoundingClientRect();
-            offset.x = clientX - rect.left;
-            offset.y = clientY - rect.top;
-            document.addEventListener('mousemove', drag);
-            document.addEventListener('mouseup', endDrag);
-            document.addEventListener('touchmove', drag);
-            document.addEventListener('touchend', endDrag);
-        }
+        icon.addEventListener('touchstart', (e) => {
+            isDragging = true; hasDragged = false;
+            offset.x = e.touches[0].clientX - iconBox.getBoundingClientRect().left;
+            offset.y = e.touches[0].clientY - iconBox.getBoundingClientRect().top;
+        });
+        document.addEventListener('touchmove', (e) => {
+            if (!isDragging) return; hasDragged = true;
+            iconBox.style.left = (e.touches[0].clientX - offset.x) + 'px';
+            iconBox.style.top = (e.touches[0].clientY - offset.y) + 'px';
+            iconBox.style.right = 'auto'; iconBox.style.bottom = 'auto';
+        });
+        document.addEventListener('touchend', () => isDragging = false);
 
-        function drag(e) {
-            if (!isDragging) return;
-            e.preventDefault();
-            hasDragged = true; 
-            const clientX = e.clientX || (e.touches ? e.touches[0].clientX : undefined);
-            const clientY = e.clientY || (e.touches ? e.touches[0].clientY : undefined);
-            if (clientX === undefined || clientY === undefined) return;
-            let newX = clientX - offset.x;
-            let newY = clientY - offset.y;
-            iconContainer.style.left = `${newX}px`;
-            iconContainer.style.top = `${newY}px`;
-            iconContainer.style.right = 'auto';
-            iconContainer.style.bottom = 'auto';
-        }
-
-        function endDrag() {
-            if (!isDragging) return;
-            isDragging = false;
-            iconContainer.style.cursor = 'grab';
-            if (hasDragged) {
-                 floatingIcon.classList.add('bounce-animation'); 
-            }
-            document.removeEventListener('mousemove', drag);
-            document.removeEventListener('mouseup', endDrag);
-            document.removeEventListener('touchmove', drag);
-            document.removeEventListener('touchend', endDrag);
-        }
-        floatingIcon.addEventListener('touchstart', startDrag);
+        window.addEventListener('load', () => { if(currentUid) checkStatus(currentUid); });
     </script>
 </body>
 </html>
