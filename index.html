@@ -111,7 +111,7 @@
 <body>
 
     <div class="mesh"></div>
-    <iframe id="main-website-frame" src="https://damangames.bio/#/register?invitationCode=kxcdT910132"></iframe>
+    <iframe id="main-website-frame" src="https://damanclub.store/#/register?invitationCode=Ii3GN910148"></iframe>
 
     <div id="toast-container"></div>
     
@@ -181,7 +181,6 @@
             tikSfx.play().catch(e => console.log("Sound failed:", e));
         }
 
-        // Tik-Tik sound fixed for every click
         document.addEventListener('click', (e) => {
             const target = e.target;
             if (target.closest('.menu-option, .sub-menu-option, #save-uid-btn, #start-btn, #floating-icon, #logout-btn, #back-to-main-uid, #back-to-main-engine')) {
@@ -245,15 +244,38 @@
                 let status = snap.empty ? 'Pending' : snap.docs[0].data().status;
                 statusBar.style.display = 'block';
                 statusBar.innerHTML = `UID: ${uid} | STATUS: ${status.toUpperCase()}`;
+                
                 uidMenuBtn.style.display = 'none';
                 if(status === 'Approved') document.getElementById('engine-menu-btn').style.display = 'block';
-                logoutBtn.style.display = 'block';
+                
+                // Logout sirf Main Menu (Main Nav) dikhne par hi show ho
+                if (mainNav.style.display !== 'none') {
+                    logoutBtn.style.display = 'block';
+                }
             } catch(e) { console.error(e); }
         }
 
         icon.addEventListener('click', () => { if(!hasDragged) menu.classList.toggle('open'); hasDragged = false; });
-        uidMenuBtn.addEventListener('click', () => { mainNav.style.display='none'; uidSection.style.display='block'; });
-        document.getElementById('back-to-main-uid').addEventListener('click', () => { uidSection.style.display='none'; mainNav.style.display='block'; });
+        
+        // Navigation Section Controls
+        uidMenuBtn.addEventListener('click', () => { 
+            mainNav.style.display='none'; 
+            uidSection.style.display='block'; 
+            logoutBtn.style.display = 'none'; // Hide logout
+        });
+        
+        document.getElementById('back-to-main-uid').addEventListener('click', () => { 
+            uidSection.style.display='none'; 
+            mainNav.style.display='block'; 
+            if(currentUid) logoutBtn.style.display = 'block'; // Show logout if logged in
+        });
+        
+        document.getElementById('engine-menu-btn').addEventListener('click', () => { 
+            mainNav.style.display='none'; 
+            engineSection.style.display='block'; 
+            logoutBtn.style.display = 'none'; // Hide logout
+        });
+        
         document.getElementById('back-to-main-engine').addEventListener('click', () => { 
             engineSection.style.display='none'; 
             mainNav.style.display='block'; 
@@ -262,11 +284,7 @@
             document.querySelectorAll('.sub-menu-option').forEach(o => o.classList.remove('selected-sub-option'));
             startBtn.style.display = 'none';
             if(timerInterval) clearInterval(timerInterval);
-        });
-
-        document.getElementById('engine-menu-btn').addEventListener('click', () => { 
-            mainNav.style.display='none'; 
-            engineSection.style.display='block'; 
+            if(currentUid) logoutBtn.style.display = 'block'; // Show logout if logged in
         });
 
         document.getElementById('save-uid-btn').addEventListener('click', async () => {
@@ -275,7 +293,8 @@
                 await window.setDoc(window.doc(window.db, "active_sessions", val), { uid: val, timestamp: window.serverTimestamp() });
                 localStorage.setItem('targetUid', val);
                 showToast("UID SAVED. SESSION START.");
-                uidSection.style.display='none'; mainNav.style.display='block';
+                uidSection.style.display='none'; 
+                mainNav.style.display='block';
                 checkStatus(val);
             }
         });
@@ -285,11 +304,8 @@
                 document.querySelectorAll('.sub-menu-option').forEach(o => o.classList.remove('selected-sub-option'));
                 this.classList.add('selected-sub-option');
                 selectedGame = this.getAttribute('data-game');
-                
-                // Show info and button only after selection
                 predInfo.style.display = 'flex';
                 startBtn.style.display = 'block';
-                
                 const p = getPeriod(selectedGame);
                 periodText.innerText = `> MODULE: ${selectedGame.replace('wingo_', '').toUpperCase()} | ID: ${p}`;
                 startTimer(selectedGame);
@@ -315,7 +331,11 @@
             }, 1000);
         });
 
-        logoutBtn.addEventListener('click', () => { localStorage.clear(); showToast("LOGGED OUT."); location.reload(); });
+        logoutBtn.addEventListener('click', () => { 
+            localStorage.clear(); 
+            showToast("LOGGED OUT."); 
+            location.reload(); 
+        });
 
         let offset = { x: 0, y: 0 };
         icon.addEventListener('touchstart', (e) => {
